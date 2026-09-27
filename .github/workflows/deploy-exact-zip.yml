@@ -1,0 +1,110 @@
+name: Deploy exact 1.zip site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check whether ZIP was already imported
+        id: state
+        shell: bash
+        run: |
+          if test -f .zip-imported; then
+            echo "imported=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "imported=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download exact 1.zip
+        if: steps.state.outputs.imported != 'true'
+        env:
+          ZIP_URL: 'https://storage.googleapis.com/gpt-engineer-file-uploads/ephemeral/tqb6freeB4RL7YZdZIO8Y604xcU2/c7b7bc7a-ecac-40c9-bbbc-8c86ddda767a?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=go-api%40lovable-core-prod.iam.gserviceaccount.com%2F20260927%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260927T080239Z&X-Goog-Expires=3599&X-Goog-Signature=aad9138d3a76f36663e4307387596bb0bff5d95e6d5c578e6562d628b0dbac656a8078042d038a352d2fc28e11e9ac4603b07061816f6a91ee9eb7ba560564062ef207b5f45d789bd07472d78daeb93e08376503a4d8e057318762e59a3a7cb6b6afc1555aaee5c00ae32dc30774f8c4f0344df50c759dff2d43ae857de938abfa0a0c1037cc190b0280df7ba4af212059f5235b9c5b6431d81af0063f6d0e3edabcc37119e5afb6ff2f5c23a371952443556e0088fe2a10dfab577dc6729f47c49dee2cbf856952663a192cd830ed4df654b659c5ed2e1b7afd1e76ff643f246ccebc5e5971e07b78bb4c14acbb8c4233ee35739900ba199fe34e40fad8ef1e&X-Goog-SignedHeaders=content-type%3Bhost%3Bx-goog-content-length-range%3Bx-goog-meta-user_id'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --retry-all-errors "$ZIP_URL" -o /tmp/1.zip
+          test "$(stat -c '%s' /tmp/1.zip)" -gt 30000000
+          unzip -q /tmp/1.zip -d /tmp/source
+
+      - name: Verify exact archive payload
+        if: steps.state.outputs.imported != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f /tmp/source/public/krasnye-linii-arxiv.zip
+          printf '%s  %s\n' '23b3fd8848370a7dfc4478cc14dcb1ffe484e49246c5ba8f42558cc9d67f81c9' /tmp/source/public/krasnye-linii-arxiv.zip | sha256sum -c -
+          test -f /tmp/source/public/archive/index.html
+          test -f /tmp/source/public/archive/style.css
+          test -f /tmp/source/public/archive/img/hero.jpg
+
+      - name: Import exact ZIP site into repository
+        if: steps.state.outputs.imported != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' ! -name '.github' ! -name 'app' -exec rm -rf {} +
+          cp -a /tmp/source/public/archive/. .
+          touch .nojekyll
+          touch .zip-imported
+          rm -rf app
+          mkdir app
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='node_modules/' \
+            --exclude='.vercel/' \
+            --exclude='dist/' \
+            --exclude='coverage/' \
+            /tmp/source/ app/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@noreply.github.com'
+          git add -A
+          git commit -m 'deploy: import exact 1.zip'
+          git push origin main
+
+      - name: Prepare Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pages
+          mkdir -p /tmp/pages
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='app/' \
+            /workspace/ /tmp/pages/ 2>/dev/null || true
+          if test -f index.html; then
+            rm -rf /tmp/pages
+            mkdir -p /tmp/pages
+            cp -a . /tmp/pages/
+            rm -rf /tmp/pages/.git /tmp/pages/.github /tmp/pages/app
+          fi
+          touch /tmp/pages/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
