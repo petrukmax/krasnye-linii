@@ -1,0 +1,87 @@
+name: Deploy 1.zip to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+
+      - name: Prepare Pages
+        uses: actions/configure-pages@v5
+
+      - name: Extract exact 1.zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _unpack _site
+          mkdir -p _unpack _site
+          echo "1.zip SHA-256:"
+          sha256sum 1.zip
+          echo "1.zip size:"
+          stat -c '%s bytes' 1.zip
+          unzip -q 1.zip -d _unpack
+
+          candidates=()
+          while IFS= read -r -d '' f; do
+            candidates+=("$(dirname "$f")")
+          done < <(find _unpack -type f -name index.html -print0)
+
+          if [ "${#candidates[@]}" -eq 0 ]; then
+            echo "ERROR: 1.zip does not contain index.html"
+            exit 1
+          fi
+
+          chosen=""
+          for d in "${candidates[@]}"; do
+            if [ -f "$d/style.css" ] && [ -d "$d/img" ]; then
+              if [[ "$d" == */public/archive ]] || [[ "$d" == */archive ]]; then
+                chosen="$d"
+                break
+              fi
+              [ -z "$chosen" ] && chosen="$d"
+            fi
+          done
+
+          if [ -z "$chosen" ]; then
+            chosen="${candidates[0]}"
+          fi
+
+          echo "Publishing directory: $chosen"
+          cp -a "$chosen"/. _site/
+
+          touch _site/.nojekyll
+
+          echo "Published entry:"
+          test -f _site/index.html
+          find _site -maxdepth 2 -type f | sort | head -200
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
