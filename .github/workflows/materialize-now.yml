@@ -1,0 +1,89 @@
+name: Materialize 1.zip site now
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Extract and materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _unpack
+          mkdir -p _unpack
+          unzip -q 1.zip -d _unpack
+
+          chosen=""
+          while IFS= read -r -d '' f; do
+            d="$(dirname "$f")"
+            if [ -f "$d/style.css" ] && [ -d "$d/img" ]; then
+              if [[ "$d" == */public/archive ]]; then
+                chosen="$d"
+                break
+              fi
+              [ -z "$chosen" ] && chosen="$d"
+            fi
+          done < <(find _unpack -type f -name index.html -print0)
+
+          test -n "$chosen"
+          echo "Using: $chosen"
+
+          find . -mindepth 1 -maxdepth 1             ! -name '.git'             ! -name '.github'             ! -name '1.zip'             ! -name 'README.md'             ! -name 'archive.bundle.part01'             ! -name 'archive.bundle.part02'             ! -name 'archive.bundle.part03'             ! -name 'archive.bundle.part04'             ! -name 'archive.bundle.part05'             ! -name 'archive.bundle.part06'             ! -name 'payload'             ! -name '_unpack'             -exec rm -rf {} +
+
+          cp -a "$chosen"/. .
+          touch .nojekyll
+          rm -rf _unpack
+
+          test -f index.html
+          test -f style.css
+          test -d img
+
+          python3 - <<'PY'
+          import os,re,urllib.parse,sys
+          bad=[]
+          for root,_,files in os.walk('.'):
+            if root.startswith('./.git') or root.startswith('./.github'):
+              continue
+            for fn in files:
+              if not fn.lower().endswith(('.html','.htm','.css')):
+                continue
+              p=os.path.join(root,fn)
+              txt=open(p,encoding='utf-8',errors='ignore').read()
+              for m in re.finditer(r'''(?:href|src)\s*=\s*["']([^"']+)["']''',txt,re.I):
+                u=m.group(1)
+                if u.startswith(('#','http:','https:','mailto:','javascript:','data:')):
+                  continue
+                u=urllib.parse.unquote(u.split('#',1)[0].split('?',1)[0])
+                if not u:
+                  continue
+                target=os.path.normpath(os.path.join(os.path.dirname(p),u))
+                if not os.path.exists(target):
+                  bad.append(f'{p} -> {u}')
+          if bad:
+            print('\n'.join(bad))
+            sys.exit(f'Broken internal links: {len(bad)}')
+          print('Internal links: OK')
+          PY
+
+      - name: Commit site into main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git commit -m "chore: materialize exact 1.zip site [skip ci]"
+          git push
