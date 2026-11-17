@@ -1,0 +1,17 @@
+node_modules
+dist
+.output
+.vinxi
+pnpm-lock.yaml
+package-lock.json
+bun.lock
+routeTree.gen.ts
+
+# Сгенерированная статическая версия для GitHub Pages
+/index.html
+/404.html
+/pages
+/static
+/manifest.webmanifest
+/robots.txt
+/.nojekyll

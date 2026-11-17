@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#151311" />
+    <meta name="robots" content="noindex" />
+    <title>Документ не найден — Красные линии</title>
+    <style>@charset "UTF-8";
+
+/* ==========================================================================
+   Красные линии — статическая версия для GitHub Pages
+   Дизайн повторяет редакционный архивный стиль основного приложения.
+   Этот файл копируется в assets/site.css при запуске npm run build:static.
+   ========================================================================== */
+
+:root {
+  --bg: #121110;
+  --bg-deep: #0c0b0a;
+  --card: #1b1815;
+  --card-hover: #221e1a;
+  --fg: #e9e2d6;
+  --fg-soft: rgba(233, 226, 214, 0.86);
+  --muted: #a49a8a;
+  --gold: #c9a45d;
+  --gold-dim: #8d7247;
+  --crimson: #8e302b;
+  --border: rgba(201, 164, 93, 0.28);
+  --border-soft: rgba(201, 164, 93, 0.14);
+  --serif: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --container: 1120px;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--fg);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse at top, rgba(65, 52, 33, 0.45), transparent 60%),
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 4px;
+  background-attachment: fixed;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+::selection {
+  background: rgba(201, 164, 93, 0.35);
+}
+
+:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.container {
+  width: min(var(--container), calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+.container--narrow {
+  width: min(760px, calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.gold-rule {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  opacity: 0.6;
+}
+
+.gold-rule--head {
+  max-width: 28rem;
+  margin: 1.5rem auto 0;
+}
+
+.gold-rule--section {
+  margin: 2.5rem 0;
+}
+
+.gold-rule--wide {
+  margin: 3rem 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 1rem;
+  z-index: 10;
+  padding: 0.7rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.skip-link:focus {
+  left: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   Шапка сайта
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.header-inner {
+  padding: 2rem 0 0;
+  text-align: center;
+}
+
+.brand {
+  display: inline-block;
+  margin-top: 0.75rem;
+}
+
+.brand h1 {
+  font-size: clamp(3.2rem, 8vw, 5.4rem);
+  line-height: 0.86;
+  color: var(--fg);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+}
+
+.tagline {
+  max-width: 44rem;
+  margin: 1rem auto 0;
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.15rem 2.2rem;
+  margin-top: 0.25rem;
+}
+
+.nav--sub {
+  margin-top: 0.1rem;
+  border-top: 1px solid rgba(201, 164, 93, 0.1);
+  padding-top: 0.1rem;
+}
+
+.nav-link {
+  display: inline-block;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid transparent;
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--fg);
+}
+
+.nav-link[aria-current="page"] {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Главный экран
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  margin-top: 2.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-deep);
+  box-shadow: var(--shadow);
+}
+
+.hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.03);
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(18, 17, 16, 0.55) 0%,
+      rgba(18, 17, 16, 0.2) 40%,
+      rgba(18, 17, 16, 0.94) 100%
+    ),
+    linear-gradient(90deg, rgba(18, 17, 16, 0.82) 0%, transparent 62%);
+}
+
+.hero__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(34rem, 70vh, 46rem);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.hero__title {
+  max-width: 44rem;
+  margin-top: 0.8rem;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.02;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+}
+
+.hero__title em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero__lead {
+  max-width: 34rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--fg-soft);
+}
+
+.hero-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 2rem;
+  background: var(--border);
+}
+
+.hero-nav a {
+  display: block;
+  padding: 1rem 1.1rem;
+  background: rgba(18, 17, 16, 0.82);
+  backdrop-filter: blur(4px);
+  transition: background-color 220ms ease;
+}
+
+.hero-nav a:hover,
+.hero-nav a:focus-visible {
+  background: var(--card-hover);
+}
+
+.hero-nav__title {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--fg);
+}
+
+.hero-nav__period {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Секции и карточки
+   -------------------------------------------------------------------------- */
+
+.section {
+  padding-top: 5rem;
+}
+
+.section--last {
+  padding-bottom: 0.5rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.section-head h2 {
+  margin-top: 0.7rem;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+}
+
+.section-count {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archive-grid > li {
+  display: flex;
+}
+
+.archive-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.8rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+  transition:
+    border-color 250ms ease,
+    transform 250ms ease,
+    background-color 250ms ease;
+}
+
+.archive-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: 5px;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 250ms ease;
+}
+
+.archive-card:hover {
+  border-color: var(--gold);
+  background: var(--card-hover);
+  transform: translateY(-2px);
+}
+
+.archive-card:hover::before {
+  border-color: rgba(201, 164, 93, 0.35);
+}
+
+.card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-numeral {
+  font-family: var(--serif);
+  font-size: 3.8rem;
+  line-height: 0.8;
+  color: var(--gold-dim);
+}
+
+.card-period,
+.card-date {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.card-title {
+  margin-top: 1.5rem;
+  font-size: 1.9rem;
+  line-height: 1.12;
+}
+
+.card-desc {
+  margin-top: 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.card-foot {
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.card-arrow {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Список последних поступлений
+   -------------------------------------------------------------------------- */
+
+.recent-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  list-style: none;
+}
+
+.recent-list li + li {
+  border-top: 1px solid var(--border-soft);
+}
+
+.recent-item {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1.2rem 0.75rem;
+  transition: background-color 200ms ease;
+}
+
+.recent-item:hover,
+.recent-item:focus-visible {
+  background: rgba(201, 164, 93, 0.06);
+}
+
+.recent-date {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--gold);
+}
+
+.recent-title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.25;
+  color: var(--fg);
+  transition: color 200ms ease;
+}
+
+.recent-item:hover .recent-title,
+.recent-item:focus-visible .recent-title {
+  color: var(--gold);
+}
+
+.recent-type {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Концепция / главная идея (раздел «Международный взгляд»)
+   -------------------------------------------------------------------------- */
+
+.concept-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.concept-lead {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+
+.concept-text {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.main-idea {
+  padding: clamp(2rem, 4vw, 3rem);
+  border: 1px solid var(--border-soft);
+  background: var(--card);
+}
+
+.main-idea p:first-of-type {
+  max-width: 58rem;
+  margin-top: 1.25rem;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.25;
+  color: var(--fg);
+}
+
+.main-idea p + p {
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Страницы блоков
+   -------------------------------------------------------------------------- */
+
+.page {
+  padding-top: 4rem;
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.breadcrumbs a {
+  transition: color 200ms ease;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus-visible {
+  color: var(--gold);
+}
+
+.breadcrumbs .sep {
+  color: var(--gold-dim);
+}
+
+.block-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.block-numeral {
+  font-family: var(--serif);
+  font-size: clamp(6rem, 16vw, 10rem);
+  font-weight: 400;
+  line-height: 0.72;
+  color: var(--gold-dim);
+}
+
+.block-title {
+  margin-top: 0.7rem;
+  font-size: clamp(2.8rem, 5vw, 4.2rem);
+  line-height: 1.02;
+}
+
+.block-desc {
+  max-width: 46rem;
+  margin-top: 1rem;
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 0 0 0 2.5rem;
+  border-left: 1px solid var(--border);
+  list-style: none;
+}
+
+.timeline__item {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline__dot {
+  position: absolute;
+  top: 2rem;
+  left: calc(-2.5rem - 4.5px);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 5px var(--bg);
+}
+
+.timeline .archive-card {
+  padding: 1.5rem 1.75rem;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.timeline-card .card-title {
+  margin-top: 0.8rem;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+}
+
+.card-author {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.card-summary {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--fg-soft);
+}
+
+.block-part {
+  margin-top: 3.5rem;
+}
+
+.part-title {
+  margin-bottom: 1.5rem;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+.pager--materials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pager-link {
+  display: block;
+}
+
+.pager-link--next {
+  text-align: right;
+}
+
+.pager-title {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.3;
+  color: var(--fg);
+  transition: color 200ms ease;
+}
+
+.pager-link:hover .pager-title,
+.pager-link:focus-visible .pager-title {
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Страница материала
+   -------------------------------------------------------------------------- */
+
+.article-header {
+  margin-top: 2.5rem;
+}
+
+.article-title {
+  margin-top: 1rem;
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  line-height: 1.06;
+}
+
+.article-author {
+  margin-top: 1rem;
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.article-part {
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.prose-archive {
+  margin-top: 2.5rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: var(--fg-soft);
+}
+
+.prose-archive p + p {
+  margin-top: 1.1em;
+}
+
+.prose-archive .lead {
+  font-size: 1.55rem;
+  line-height: 1.45;
+  color: var(--fg);
+}
+
+.prose-section {
+  margin-top: 2.5rem;
+}
+
+.prose-section h3 {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.theses {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.theses li {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.9rem;
+}
+
+.theses li::before {
+  content: "";
+  flex: 0 0 1.4rem;
+  height: 1px;
+  margin-top: 0.85em;
+  background: var(--gold);
+}
+
+.source-box {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-soft);
+  background: var(--card);
+}
+
+.source-label {
+  margin-top: 0.5rem;
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  color: var(--fg);
+}
+
+.source-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  word-break: break-all;
+}
+
+.source-missing {
+  margin-top: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Подвал
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: 5rem;
+  border-top: 1px solid var(--border-soft);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Страница 404
+   -------------------------------------------------------------------------- */
+
+.not-found-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.not-found {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1.25rem;
+  text-align: center;
+}
+
+.not-found h1 {
+  margin-top: 1rem;
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  line-height: 1;
+}
+
+.not-found-text {
+  max-width: 34rem;
+  margin-top: 1rem;
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.not-found .gold-rule {
+  width: min(16rem, 70%);
+  margin: 2rem auto;
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   Адаптивность
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .hero-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .block-hero {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .block-numeral {
+    font-size: clamp(5rem, 22vw, 8rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .archive-grid,
+  .concept-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .section-count {
+    display: none;
+  }
+
+  .pager--materials {
+    grid-template-columns: 1fr;
+  }
+
+  .pager-link--next {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .container,
+  .container--narrow {
+    width: calc(100% - 1.75rem);
+  }
+
+  .header-inner {
+    padding-top: 1.5rem;
+  }
+
+  .nav {
+    gap: 0.15rem 1.25rem;
+  }
+
+  .nav-link {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+  }
+
+  .hero {
+    margin-top: 1.5rem;
+  }
+
+  .hero__content {
+    min-height: 32rem;
+  }
+
+  .hero__lead {
+    font-size: 0.88rem;
+  }
+
+  .section {
+    padding-top: 3.5rem;
+  }
+
+  .recent-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem 1rem;
+    padding: 1rem 0.25rem;
+  }
+
+  .recent-date {
+    grid-column: 1 / -1;
+  }
+
+  .recent-title {
+    grid-column: 1;
+    font-size: 1.2rem;
+  }
+
+  .recent-type {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .timeline {
+    padding-left: 1.6rem;
+  }
+
+  .timeline__dot {
+    left: calc(-1.6rem - 4.5px);
+  }
+
+  .timeline .archive-card {
+    padding: 1.25rem;
+  }
+
+  .archive-card {
+    padding: 1.35rem;
+  }
+
+  .footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+  </head>
+  <body class="not-found-body">
+    <main class="not-found" id="main">
+      <p class="eyebrow">Ошибка 404</p>
+      <h1>Документ не найден</h1>
+      <p class="not-found-text">
+        Такой страницы в архиве нет, либо она была перемещена.
+      </p>
+      <div class="gold-rule" role="presentation"></div>
+      <div class="not-found-actions">
+        <a class="nav-link" data-home href="./">Вернуться на главную</a>
+        <a class="nav-link" href="javascript:history.back()">Назад</a>
+      </div>
+    </main>
+    <script>
+      (function () {
+        var parts = location.pathname.split("/").filter(Boolean);
+        var candidates = [];
+        if (/\.github\.io$/i.test(location.hostname) && parts.length > 0) {
+          candidates.push("/" + parts[0] + "/");
+        }
+        candidates.push("/");
+
+        function apply(base) {
+          document.querySelectorAll("[data-home]").forEach(function (link) {
+            link.href = base;
+          });
+        }
+
+        (async function () {
+          for (var i = 0; i < candidates.length; i += 1) {
+            try {
+              var response = await fetch(candidates[i] + "manifest.webmanifest", {
+                method: "HEAD",
+                cache: "no-store",
+              });
+              if (response.ok) {
+                apply(candidates[i]);
+                return;
+              }
+            } catch (error) {
+              // Локальный файл или сеть недоступны — пробуем следующий вариант.
+            }
+          }
+          apply("/");
+        })();
+      })();
+    </script>
+  </body>
+</html>

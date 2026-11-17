@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>debug</title>
+  </head>
+  <body>
+    <iframe id="site" src="index.html" style="width:100%;height:800px;border:0"></iframe>
+    <pre id="out"></pre>
+    <script>
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const frame = document.getElementById("site");
+          const doc = frame.contentDocument;
+          const win = frame.contentWindow;
+          const w = win.innerWidth;
+          const over = [...doc.querySelectorAll("*")]
+            .map((el) => ({ el, rect: el.getBoundingClientRect() }))
+            .filter((item) => item.rect.right > w + 1 || item.rect.left < -1)
+            .slice(0, 30)
+            .map(
+              (item) =>
+                `${item.el.tagName}.${String(item.el.className)} L=${Math.round(
+                  item.rect.left,
+                )} R=${Math.round(item.rect.right)} W=${Math.round(item.rect.width)}`,
+            );
+          document.getElementById("out").textContent =
+            `innerWidth=${w} scrollWidth=${doc.documentElement.scrollWidth}\n` +
+            over.join("\n");
+        }, 1500);
+      });
+    </script>
+  </body>
+</html>

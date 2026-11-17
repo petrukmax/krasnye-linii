@@ -1,0 +1,1 @@
+import{t as e}from"./index-DkpotlJj.js";var t=e();function n(){return(0,t.jsxs)(`main`,{className:`archive-shell`,children:[(0,t.jsx)(`h1`,{className:`sr-only`,children:`Красные линии — архив первоисточников 2007–2024`}),(0,t.jsx)(`iframe`,{src:`/archive/index.html`,title:`Красные линии — архив первоисточников`})]})}export{n as component};
