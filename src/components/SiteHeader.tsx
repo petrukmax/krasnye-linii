@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { blocks } from "@/data/archive";
 import { internationalBlocks } from "@/data/international";
+import { newsBlocks } from "@/data/news";
 
 export function SiteHeader() {
   return (
@@ -44,6 +45,24 @@ export function SiteHeader() {
               className="nav-link"
             >
               Блок {b.numeral}
+            </Link>
+          ))}
+        </nav>
+        <nav
+          aria-label="Раздел «Новости»"
+          className="mt-1 flex flex-wrap justify-center gap-x-6 gap-y-2 border-t border-border/40 pt-1 sm:gap-x-9"
+        >
+          <Link to="/novosti" className="nav-link" activeOptions={{ exact: true }}>
+            Новости
+          </Link>
+          {newsBlocks.map((b) => (
+            <Link
+              key={b.id}
+              to="/novosti/$year"
+              params={{ year: b.id }}
+              className="nav-link"
+            >
+              {b.numeral}
             </Link>
           ))}
         </nav>

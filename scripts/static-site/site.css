@@ -326,6 +326,10 @@ p {
   color: var(--muted);
 }
 
+.hero-nav--duo {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 /* --------------------------------------------------------------------------
    Секции и карточки
    -------------------------------------------------------------------------- */
@@ -600,6 +604,12 @@ p {
   font-weight: 400;
   line-height: 0.72;
   color: var(--gold-dim);
+}
+
+.block-numeral--year {
+  font-size: clamp(3rem, 7vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .block-title {
@@ -981,6 +991,10 @@ p {
 
   .hero__lead {
     font-size: 0.88rem;
+  }
+
+  .hero-nav--duo {
+    grid-template-columns: 1fr;
   }
 
   .section {

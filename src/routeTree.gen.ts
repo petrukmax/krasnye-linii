@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlokBlockIdRouteImport } from './routes/blok.$blockId'
 import { Route as MaterialSlugRouteImport } from './routes/material.$slug'
 import { Route as MezhdunarodnyjVzglyadIndexRouteImport } from './routes/mezhdunarodnyj-vzglyad/index'
+import { Route as NovostiIndexRouteImport } from './routes/novosti/index'
+import { Route as NovostiYearRouteImport } from './routes/novosti/$year'
 import { Route as MezhdunarodnyjVzglyadBlokBlockIdRouteImport } from './routes/mezhdunarodnyj-vzglyad/blok.$blockId'
 import { Route as MezhdunarodnyjVzglyadMaterialSlugRouteImport } from './routes/mezhdunarodnyj-vzglyad/material.$slug'
+import { Route as NovostiMaterialSlugRouteImport } from './routes/novosti/material.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +40,16 @@ const MezhdunarodnyjVzglyadIndexRoute =
     path: '/mezhdunarodnyj-vzglyad/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const NovostiIndexRoute = NovostiIndexRouteImport.update({
+  id: '/novosti/',
+  path: '/novosti/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NovostiYearRoute = NovostiYearRouteImport.update({
+  id: '/novosti/$year',
+  path: '/novosti/$year',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MezhdunarodnyjVzglyadBlokBlockIdRoute =
   MezhdunarodnyjVzglyadBlokBlockIdRouteImport.update({
     id: '/mezhdunarodnyj-vzglyad/blok/$blockId',
@@ -49,31 +62,45 @@ const MezhdunarodnyjVzglyadMaterialSlugRoute =
     path: '/mezhdunarodnyj-vzglyad/material/$slug',
     getParentRoute: () => rootRouteImport,
   } as any)
+const NovostiMaterialSlugRoute = NovostiMaterialSlugRouteImport.update({
+  id: '/novosti/material/$slug',
+  path: '/novosti/material/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blok/$blockId': typeof BlokBlockIdRoute
   '/material/$slug': typeof MaterialSlugRoute
+  '/novosti/$year': typeof NovostiYearRoute
   '/mezhdunarodnyj-vzglyad/': typeof MezhdunarodnyjVzglyadIndexRoute
+  '/novosti/': typeof NovostiIndexRoute
   '/mezhdunarodnyj-vzglyad/blok/$blockId': typeof MezhdunarodnyjVzglyadBlokBlockIdRoute
   '/mezhdunarodnyj-vzglyad/material/$slug': typeof MezhdunarodnyjVzglyadMaterialSlugRoute
+  '/novosti/material/$slug': typeof NovostiMaterialSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blok/$blockId': typeof BlokBlockIdRoute
   '/material/$slug': typeof MaterialSlugRoute
+  '/novosti/$year': typeof NovostiYearRoute
   '/mezhdunarodnyj-vzglyad': typeof MezhdunarodnyjVzglyadIndexRoute
+  '/novosti': typeof NovostiIndexRoute
   '/mezhdunarodnyj-vzglyad/blok/$blockId': typeof MezhdunarodnyjVzglyadBlokBlockIdRoute
   '/mezhdunarodnyj-vzglyad/material/$slug': typeof MezhdunarodnyjVzglyadMaterialSlugRoute
+  '/novosti/material/$slug': typeof NovostiMaterialSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/blok/$blockId': typeof BlokBlockIdRoute
   '/material/$slug': typeof MaterialSlugRoute
+  '/novosti/$year': typeof NovostiYearRoute
   '/mezhdunarodnyj-vzglyad/': typeof MezhdunarodnyjVzglyadIndexRoute
+  '/novosti/': typeof NovostiIndexRoute
   '/mezhdunarodnyj-vzglyad/blok/$blockId': typeof MezhdunarodnyjVzglyadBlokBlockIdRoute
   '/mezhdunarodnyj-vzglyad/material/$slug': typeof MezhdunarodnyjVzglyadMaterialSlugRoute
+  '/novosti/material/$slug': typeof NovostiMaterialSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,34 +108,46 @@ export interface FileRouteTypes {
     | '/'
     | '/blok/$blockId'
     | '/material/$slug'
+    | '/novosti/$year'
     | '/mezhdunarodnyj-vzglyad/'
+    | '/novosti/'
     | '/mezhdunarodnyj-vzglyad/blok/$blockId'
     | '/mezhdunarodnyj-vzglyad/material/$slug'
+    | '/novosti/material/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/blok/$blockId'
     | '/material/$slug'
+    | '/novosti/$year'
     | '/mezhdunarodnyj-vzglyad'
+    | '/novosti'
     | '/mezhdunarodnyj-vzglyad/blok/$blockId'
     | '/mezhdunarodnyj-vzglyad/material/$slug'
+    | '/novosti/material/$slug'
   id:
     | '__root__'
     | '/'
     | '/blok/$blockId'
     | '/material/$slug'
+    | '/novosti/$year'
     | '/mezhdunarodnyj-vzglyad/'
+    | '/novosti/'
     | '/mezhdunarodnyj-vzglyad/blok/$blockId'
     | '/mezhdunarodnyj-vzglyad/material/$slug'
+    | '/novosti/material/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlokBlockIdRoute: typeof BlokBlockIdRoute
   MaterialSlugRoute: typeof MaterialSlugRoute
+  NovostiYearRoute: typeof NovostiYearRoute
   MezhdunarodnyjVzglyadIndexRoute: typeof MezhdunarodnyjVzglyadIndexRoute
+  NovostiIndexRoute: typeof NovostiIndexRoute
   MezhdunarodnyjVzglyadBlokBlockIdRoute: typeof MezhdunarodnyjVzglyadBlokBlockIdRoute
   MezhdunarodnyjVzglyadMaterialSlugRoute: typeof MezhdunarodnyjVzglyadMaterialSlugRoute
+  NovostiMaterialSlugRoute: typeof NovostiMaterialSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -141,6 +180,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MezhdunarodnyjVzglyadIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/novosti/': {
+      id: '/novosti/'
+      path: '/novosti'
+      fullPath: '/novosti/'
+      preLoaderRoute: typeof NovostiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/novosti/$year': {
+      id: '/novosti/$year'
+      path: '/novosti/$year'
+      fullPath: '/novosti/$year'
+      preLoaderRoute: typeof NovostiYearRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mezhdunarodnyj-vzglyad/blok/$blockId': {
       id: '/mezhdunarodnyj-vzglyad/blok/$blockId'
       path: '/mezhdunarodnyj-vzglyad/blok/$blockId'
@@ -155,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MezhdunarodnyjVzglyadMaterialSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/novosti/material/$slug': {
+      id: '/novosti/material/$slug'
+      path: '/novosti/material/$slug'
+      fullPath: '/novosti/material/$slug'
+      preLoaderRoute: typeof NovostiMaterialSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,10 +222,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlokBlockIdRoute: BlokBlockIdRoute,
   MaterialSlugRoute: MaterialSlugRoute,
+  NovostiYearRoute: NovostiYearRoute,
   MezhdunarodnyjVzglyadIndexRoute: MezhdunarodnyjVzglyadIndexRoute,
+  NovostiIndexRoute: NovostiIndexRoute,
   MezhdunarodnyjVzglyadBlokBlockIdRoute: MezhdunarodnyjVzglyadBlokBlockIdRoute,
   MezhdunarodnyjVzglyadMaterialSlugRoute:
     MezhdunarodnyjVzglyadMaterialSlugRoute,
+  NovostiMaterialSlugRoute: NovostiMaterialSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -37,11 +37,15 @@ const sitePath = {
   appleIcon: "static/icon-512.png",
   heroArchive: "static/hero-archive.jpg",
   heroInternational: "static/hero-international.jpg",
+  heroNews: "static/hero-news.jpg",
   block: (id) => `pages/blok-${id}.html`,
   material: (slug) => `pages/material/${slug}.html`,
   internationalHome: "pages/mezhdunarodnyj-vzglyad/index.html",
   internationalBlock: (id) => `pages/mezhdunarodnyj-vzglyad/blok-${id}.html`,
   internationalMaterial: (slug) => `pages/mezhdunarodnyj-vzglyad/material/${slug}.html`,
+  newsHome: "pages/novosti/index.html",
+  newsBlock: (id) => `pages/novosti/${id}.html`,
+  newsMaterial: (slug) => `pages/novosti/material/${slug}.html`,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -91,14 +95,18 @@ function materialCountLabel(count) {
 
 let archiveBlocks = [];
 let internationalBlocks = [];
+let newsBlocks = [];
 let blocks = [];
 let materials = [];
 let internationalMaterials = [];
+let newsMaterials = [];
 let formatDate = () => "";
 let formatInternationalDate = () => "";
+let formatNewsDate = () => "";
 let getMaterialsByBlock = () => [];
 let getInternationalMaterialsByBlock = () => [];
 let groupInternationalMaterialsByPart = () => [];
+let getNewsMaterialsByBlock = () => [];
 
 function renderNavigation(outPath, active) {
   const navLink = (target, label, key) => {
@@ -127,6 +135,12 @@ function renderNavigation(outPath, active) {
                 `intl-${block.id}`,
               ),
             )
+            .join("\n          ")}
+        </nav>
+        <nav class="nav nav--sub" aria-label="Раздел «Новости»">
+          ${navLink(sitePath.newsHome, "Новости", "news-home")}
+          ${newsBlocks
+            .map((block) => navLink(sitePath.newsBlock(block.id), block.numeral, `news-${block.id}`))
             .join("\n          ")}
         </nav>`;
 }
@@ -892,6 +906,346 @@ function renderInternationalMaterialPage(material, block) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Главная страница раздела «Новости»                                        */
+/* -------------------------------------------------------------------------- */
+
+function renderNewsBlockCard(block, outPath) {
+  const count = getNewsMaterialsByBlock(block.id).length;
+  return `<li>
+              <a class="archive-card" href="${hrefFor(outPath, sitePath.newsBlock(block.id))}">
+                <div class="card-top">
+                  <span class="card-numeral">${escapeHtml(block.numeral)}</span>
+                  <span class="card-period">${escapeHtml(block.period)}</span>
+                </div>
+                <h3 class="card-title">${escapeHtml(block.title)}</h3>
+                <p class="card-desc">${escapeHtml(block.description)}</p>
+                <span class="card-foot">
+                  <span class="card-arrow">${materialCountLabel(count)} →</span>
+                </span>
+              </a>
+            </li>`;
+}
+
+function renderNewsHome() {
+  const outPath = sitePath.newsHome;
+  const latest = [...newsMaterials].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+
+  const heroLinks = newsBlocks
+    .map(
+      (block) => `<a href="${hrefFor(outPath, sitePath.newsBlock(block.id))}">
+                <span class="eyebrow">${escapeHtml(block.period)}</span>
+                <span class="hero-nav__title">${escapeHtml(block.title)}</span>
+                <span class="hero-nav__period">${materialCountLabel(
+                  getNewsMaterialsByBlock(block.id).length,
+                )}</span>
+              </a>`,
+    )
+    .join("\n              ");
+
+  const blockCards = newsBlocks
+    .map((block) => renderNewsBlockCard(block, outPath))
+    .join("\n            ");
+
+  const recent = latest
+    .map((material) =>
+      renderRecentItem({
+        outPath,
+        target: sitePath.newsMaterial(material.slug),
+        date: formatNewsDate(material),
+        title: material.title,
+        type: material.type,
+      }),
+    )
+    .join("\n            ");
+
+  const content = `
+        <div class="container">
+          <section class="hero" aria-labelledby="hero-title">
+            <img
+              class="hero__image"
+              src="${hrefFor(outPath, sitePath.heroNews)}"
+              alt="Ночной кабинет с видом на Капитолий: стопки документов на столе и мониторы с картой мира"
+              fetchpriority="high"
+            />
+            <div class="hero__overlay" aria-hidden="true"></div>
+            <div class="hero__content">
+              <p class="eyebrow">Новости</p>
+              <h2 class="hero__title" id="hero-title">
+                Хроника дискуссии: <em>2025–2026</em>
+              </h2>
+              <p class="hero__lead">
+                Раздел собирает наиболее значимые международные выступления, интервью и
+                аналитические материалы, в которых украинский конфликт рассматривается в контексте
+                расширения НАТО, политики США и кризиса европейской безопасности.
+              </p>
+              <nav class="hero-nav hero-nav--duo" aria-label="Годы раздела «Новости»">
+                ${heroLinks}
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <div class="container">
+          <section class="section" aria-labelledby="concept-title">
+            <p class="eyebrow">Концепция раздела</p>
+            <h2 id="concept-title" style="margin-top: 0.7rem; max-width: 52rem">
+              Новости, которые продолжают линию архива
+            </h2>
+            <div class="gold-rule gold-rule--section" role="presentation"></div>
+            <div class="concept-grid">
+              <p class="concept-lead">
+                В центре внимания — не только события на фронте, но и дипломатические тупики,
+                проблема гарантий безопасности, роль Европы, санкционное давление, интересы
+                военно-промышленного комплекса и растущее сопротивление Глобального Юга западной
+                повестке.
+              </p>
+              <p class="concept-text">
+                Материалы раздела показывают, что конфликт не завершился в 2022 году: он продолжает
+                развиваться, а его причины, последствия и возможные пути урегулирования остаются
+                предметом острой международной дискуссии. Раздел будет дополняться по мере появления
+                новых материалов.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <div class="container">
+          <section class="section" aria-labelledby="structure-title">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Структура раздела</p>
+                <h2 id="structure-title">Хроника по годам</h2>
+              </div>
+              <span class="section-count">
+                ${materialCountLabel(newsMaterials.length)}
+              </span>
+            </div>
+            <div class="gold-rule gold-rule--section" role="presentation"></div>
+            <ol class="archive-grid">
+            ${blockCards}
+            </ol>
+          </section>
+        </div>
+
+        <div class="container">
+          <section class="section" aria-labelledby="idea-title">
+            <div class="main-idea">
+              <p class="eyebrow">Главная идея раздела</p>
+              <p>
+                Конфликт нельзя объяснять только действиями Москвы или Киева. Он рассматривается
+                как результат более широкой стратегии: расширения НАТО, политики сдерживания
+                России, зависимости Европы от США и кризиса однополярной модели мира.
+              </p>
+              <p>
+                Материалы раздела показывают, что без пересмотра модели европейской безопасности
+                устойчивый мир невозможен.
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <div class="container">
+          <section class="section section--last" aria-labelledby="recent-title">
+            <p class="eyebrow">Последние по дате</p>
+            <h2 id="recent-title" style="margin-top: 0.7rem">Новые поступления</h2>
+            <div class="gold-rule gold-rule--section" role="presentation"></div>
+            <ul class="recent-list">
+            ${recent}
+            </ul>
+          </section>
+        </div>`;
+
+  return renderPage({
+    outPath,
+    title: "Новости — хроника дискуссии 2025–2026",
+    description:
+      "Международные выступления, интервью и аналитические материалы 2025–2026 годов: украинский конфликт в контексте расширения НАТО, политики США и кризиса европейской безопасности.",
+    active: "news-home",
+    content,
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Страницы года раздела «Новости»                                           */
+/* -------------------------------------------------------------------------- */
+
+function renderNewsBlockPage(block) {
+  const outPath = sitePath.newsBlock(block.id);
+  const items = getNewsMaterialsByBlock(block.id);
+  const index = newsBlocks.findIndex((item) => item.id === block.id);
+  const previous = newsBlocks[index - 1];
+  const next = newsBlocks[index + 1];
+
+  const timeline = items
+    .map((material) =>
+      renderTimelineItem({
+        outPath,
+        target: sitePath.newsMaterial(material.slug),
+        date: formatNewsDate(material),
+        type: material.type,
+        place: material.place,
+        title: material.title,
+        author: material.author,
+        summary: material.summary,
+      }),
+    )
+    .join("\n                  ");
+
+  const previousLink = previous
+    ? `<a class="nav-link" href="${hrefFor(outPath, sitePath.newsBlock(previous.id))}">← ${escapeHtml(previous.numeral)}</a>`
+    : "<span></span>";
+  const nextLink = next
+    ? `<a class="nav-link" href="${hrefFor(outPath, sitePath.newsBlock(next.id))}">${escapeHtml(next.numeral)} →</a>`
+    : "<span></span>";
+
+  const content = `
+        <div class="container page">
+          <nav class="breadcrumbs" aria-label="Хлебные крошки">
+            <a href="${hrefFor(outPath, sitePath.home)}">Главная</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <a href="${hrefFor(outPath, sitePath.newsHome)}">Новости</a>
+          </nav>
+
+          <header class="block-hero block-hero--news">
+            <span class="block-numeral block-numeral--year" aria-hidden="true">${escapeHtml(
+              block.numeral,
+            )}</span>
+            <div>
+              <p class="eyebrow">Новости · ${escapeHtml(block.period)}</p>
+              <h2 class="block-title">${escapeHtml(block.title)}</h2>
+              <p class="block-desc">${escapeHtml(block.description)}</p>
+            </div>
+          </header>
+
+          <div class="gold-rule gold-rule--wide" role="presentation"></div>
+
+          <ol class="timeline">
+                  ${timeline}
+          </ol>
+
+          <nav class="pager" aria-label="Соседние годы">
+            ${previousLink}
+            ${nextLink}
+          </nav>
+        </div>`;
+
+  return renderPage({
+    outPath,
+    title: `Новости ${block.numeral}. ${block.title} — Красные линии`,
+    description: block.description,
+    active: `news-${block.id}`,
+    content,
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Страница материала раздела «Новости»                                      */
+/* -------------------------------------------------------------------------- */
+
+function renderNewsMaterialPage(material, block) {
+  const outPath = sitePath.newsMaterial(material.slug);
+  const siblings = getNewsMaterialsByBlock(block.id);
+  const index = siblings.findIndex((item) => item.slug === material.slug);
+  const previous = siblings[index - 1];
+  const next = siblings[index + 1];
+
+  const paragraphs = material.context
+    .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+    .join("\n              ");
+
+  const theses = material.theses
+    .map((thesis) => `<li>${escapeHtml(thesis)}</li>`)
+    .join("\n                ");
+
+  const source = material.sourceUrl
+    ? `<a class="source-link" href="${escapeAttribute(
+        material.sourceUrl,
+      )}" target="_blank" rel="noopener noreferrer">${escapeHtml(material.sourceUrl)}</a>`
+    : '<p class="source-missing">Ссылка на оригинал будет добавлена.</p>';
+
+  const previousLink = previous
+    ? `<a class="pager-link" href="${hrefFor(outPath, sitePath.newsMaterial(previous.slug))}">
+                <span class="eyebrow">← Предыдущий</span>
+                <span class="pager-title">${escapeHtml(previous.title)}</span>
+              </a>`
+    : "<span></span>";
+  const nextLink = next
+    ? `<a class="pager-link pager-link--next" href="${hrefFor(
+        outPath,
+        sitePath.newsMaterial(next.slug),
+      )}">
+                <span class="eyebrow">Следующий →</span>
+                <span class="pager-title">${escapeHtml(next.title)}</span>
+              </a>`
+    : "<span></span>";
+
+  const content = `
+        <div class="container container--narrow page">
+          <nav class="breadcrumbs" aria-label="Хлебные крошки">
+            <a href="${hrefFor(outPath, sitePath.home)}">Главная</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <a href="${hrefFor(outPath, sitePath.newsHome)}">Новости</a>
+            <span class="sep" aria-hidden="true">/</span>
+            <a href="${hrefFor(outPath, sitePath.newsBlock(block.id))}">
+              ${escapeHtml(block.numeral)}. ${escapeHtml(block.title)}
+            </a>
+          </nav>
+
+          <header class="article-header">
+            <p class="eyebrow">
+              ${escapeHtml(material.type)} · ${escapeHtml(formatNewsDate(material))}${
+                material.place ? ` · ${escapeHtml(material.place)}` : ""
+              }
+            </p>
+            <h2 class="article-title">${escapeHtml(material.title)}</h2>
+            <p class="article-author">${escapeHtml(material.author)}</p>
+          </header>
+
+          <div class="gold-rule gold-rule--wide" role="presentation"></div>
+
+          <article class="prose-archive">
+            <p class="lead">${escapeHtml(material.summary)}</p>
+            <section class="prose-section">
+              <h3>Описание</h3>
+              <div>
+              ${paragraphs}
+              </div>
+            </section>
+            <section class="prose-section">
+              <h3>Ключевые тезисы</h3>
+              <ul class="theses">
+                ${theses}
+              </ul>
+            </section>
+            <section class="prose-section">
+              <h3>Значение для архива</h3>
+              <p>${escapeHtml(material.significance)}</p>
+            </section>
+          </article>
+
+          <aside class="source-box">
+            <p class="eyebrow">Первоисточник</p>
+            <p class="source-label">${escapeHtml(material.sourceLabel)}</p>
+            ${source}
+          </aside>
+
+          <nav class="pager pager--materials" aria-label="Соседние материалы">
+            ${previousLink}
+            ${nextLink}
+          </nav>
+        </div>`;
+
+  return renderPage({
+    outPath,
+    title: `${material.title} (${material.materialYear}) — Новости — Красные линии`,
+    description: material.summary,
+    active: `news-${block.id}`,
+    ogType: "article",
+    content,
+  });
+}
+
+/* -------------------------------------------------------------------------- */
 /*  404 — со встроенными стилями, чтобы страница выглядела нормально          */
 /*  даже при открытии по произвольному вложенному адресу.                     */
 /* -------------------------------------------------------------------------- */
@@ -1013,7 +1367,8 @@ async function loadContent() {
   try {
     const archive = await vite.ssrLoadModule("/src/data/archive.ts");
     const international = await vite.ssrLoadModule("/src/data/international.ts");
-    return { archive, international };
+    const news = await vite.ssrLoadModule("/src/data/news.ts");
+    return { archive, international, news };
   } finally {
     await vite.close();
   }
@@ -1026,7 +1381,7 @@ async function writeFileAt(relativePath, contents) {
 }
 
 async function build() {
-  const { archive, international } = await loadContent();
+  const { archive, international, news } = await loadContent();
 
   blocks = archive.blocks;
   archiveBlocks = archive.blocks;
@@ -1039,6 +1394,11 @@ async function build() {
   formatInternationalDate = international.formatInternationalDate;
   getInternationalMaterialsByBlock = international.getInternationalMaterialsByBlock;
   groupInternationalMaterialsByPart = international.groupInternationalMaterialsByPart;
+
+  newsBlocks = news.newsBlocks;
+  newsMaterials = news.newsMaterials;
+  formatNewsDate = news.formatNewsDate;
+  getNewsMaterialsByBlock = news.getNewsMaterialsByBlock;
 
   await rm(pagesDir, { recursive: true, force: true });
   await mkdir(pagesDir, { recursive: true });
@@ -1055,6 +1415,10 @@ async function build() {
   await copyFile(
     path.join(projectRoot, "src", "assets", "hero-international.jpg"),
     path.join(projectRoot, sitePath.heroInternational),
+  );
+  await copyFile(
+    path.join(projectRoot, "img", "07.jpg"),
+    path.join(projectRoot, sitePath.heroNews),
   );
   await copyFile(
     path.join(projectRoot, "public", "favicon.png"),
@@ -1116,14 +1480,34 @@ async function build() {
     );
   }
 
+  await writeFileAt(sitePath.newsHome, renderNewsHome());
+
+  for (const block of newsBlocks) {
+    await writeFileAt(sitePath.newsBlock(block.id), renderNewsBlockPage(block));
+  }
+
+  for (const material of newsMaterials) {
+    const block = newsBlocks.find((item) => item.id === material.year);
+    if (!block) {
+      throw new Error(`Для материала «${material.slug}» не найден год «${material.year}».`);
+    }
+    await writeFileAt(
+      sitePath.newsMaterial(material.slug),
+      renderNewsMaterialPage(material, block),
+    );
+  }
+
   const archivePages = blocks.length + materials.length;
   const internationalPages = internationalBlocks.length + internationalMaterials.length;
+  const newsPages = newsBlocks.length + newsMaterials.length;
 
   console.log("Статический сайт собран:");
   console.log(`  index.html — главная`);
-  console.log(`  pages/ — ${archivePages + internationalPages + 1} страниц`);
+  console.log(`  pages/ — ${archivePages + internationalPages + newsPages + 1} страниц`);
   console.log(`  static/ — стили и изображения`);
-  console.log(`  всего материалов: ${materials.length + internationalMaterials.length}`);
+  console.log(
+    `  всего материалов: ${materials.length + internationalMaterials.length + newsMaterials.length}`,
+  );
   console.log("Запуск: npm run build:static");
 }
 

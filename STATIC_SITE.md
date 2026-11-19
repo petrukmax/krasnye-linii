@@ -30,11 +30,18 @@ pages/
     blok-i.html … blok-iv.html
     material/
       <slug>.html                  ← 20 страниц материалов раздела
+  novosti/
+    index.html                     ← главная раздела «Новости»
+    2025.html                      ← материалы 2025 года
+    2026.html                      ← материалы 2026 года
+    material/
+      <slug>.html                  ← страницы материалов раздела
 
 static/
   site.css                         ← сгенерированная копия стилей
   hero-archive.jpg
   hero-international.jpg
+  hero-news.jpg
   favicon.png
   icon-512.png
 
@@ -55,7 +62,8 @@ scripts/
 
 1. Загружает данные из тех же TypeScript-файлов, что и основное приложение:
    - `src/data/archive.ts` — основной архив;
-   - `src/data/international.ts` — раздел «Международный взгляд».
+   - `src/data/international.ts` — раздел «Международный взгляд»;
+   - `src/data/news.ts` — раздел «Новости».
 2. Рендерит HTML-строки по шаблонам внутри генератора.
 3. Копирует стили и изображения в `static/`.
 4. Создаёт главную, страницы блоков, страницы материалов, 404 и служебные файлы.
@@ -100,6 +108,12 @@ src/data/archive.ts
 src/data/international.ts
 ```
 
+Для раздела «Новости»:
+
+```text
+src/data/news.ts
+```
+
 Можно менять заголовки, авторов, даты, аннотации, тезисы, ссылки на первоисточники. После изменений:
 
 ```bash
@@ -114,9 +128,11 @@ npm run check:static
 1. Откройте нужный файл данных.
 2. Добавьте объект в массив `materials` или `internationalMaterials`.
 3. Укажите уникальный `slug` — из него будет создано имя страницы:
-   `pages/material/<slug>.html` или
-   `pages/mezhdunarodnyj-vzglyad/material/<slug>.html`.
-4. Убедитесь, что `blockId` совпадает с одним из существующих блоков (`i`, `ii`, `iii`, `iv`).
+   `pages/material/<slug>.html`,
+   `pages/mezhdunarodnyj-vzglyad/material/<slug>.html` или
+   `pages/novosti/material/<slug>.html`.
+4. Убедитесь, что `blockId` совпадает с одним из существующих блоков (`i`, `ii`, `iii`, `iv`),
+   а для раздела «Новости» поле `year` — с одним из годов (`2025` или `2026`).
 5. Запустите `npm run build:static`.
 
 Генератор сам:
@@ -143,6 +159,9 @@ npm run check:static
 Для раздела «Международный взгляд» — аналогично в `src/data/international.ts`:
 `InternationalBlockId` и `internationalBlocks`.
 
+Для раздела «Новости» новый год добавляется в `src/data/news.ts`:
+тип `NewsYear`, массив `newsBlocks` и значения поля `year` у материалов.
+
 Генератор автоматически создаст новую страницу блока и добавит пункт в навигацию.
 
 ### 3.4. Изменение текстов главной страницы
@@ -150,7 +169,8 @@ npm run check:static
 Тексты hero-блока, концепции раздела и блока «Главная идея» находятся не в данных, а в шаблонах генератора:
 
 - главная: функция `renderHome()`;
-- главная раздела: функция `renderInternationalHome()`;
+- главная раздела «Международный взгляд»: функция `renderInternationalHome()`;
+- главная раздела «Новости»: функция `renderNewsHome()`;
 - шапка и подвал: `renderHeader()` и `renderFooter()`.
 
 После правок:
@@ -302,7 +322,7 @@ nitro: { renderer: false } as never,
 
 ## 8. Краткий чек-лист при любом изменении
 
-1. Изменили контент → правьте `src/data/archive.ts` или `src/data/international.ts`.
+1. Изменили контент → правьте `src/data/archive.ts`, `src/data/international.ts` или `src/data/news.ts`.
 2. Изменили текст главной или разметку → правьте `scripts/build-static-site.mjs`.
 3. Изменили оформление → правьте `scripts/static-site/site.css`.
 4. Запустите:
